@@ -79,37 +79,36 @@ See https://github.com/adobe-type-tools/cmap-resources
         bottom: 0 !important;
         overflow: hidden !important;
     }
+    
     /* Round corners on the magazine */
-#magazine,
-#magazine canvas,
-#magazineContainer {
-    border-radius: 12px !important;
-    overflow: hidden !important;
-}
-
-#magazine .page,
-#magazine canvas {
-    border-radius: 12px !important;
-}
-That's the page canvases rendering. Add this CSS to your `index.html` style section:
-
-```css
-#magazine canvas {
-    background: transparent !important;
-}
-
-.pdfViewer .page {
-    background: transparent !important;
-}
-
-#viewer .canvasWrapper {
-    background: transparent !important;
-}
-```
-
-Add those right after the existing magazine styles (after line 93 where the rounded corners end).
-
-This makes the canvas backgrounds transparent while they're loading. Commit and test!
+    #magazine,
+    #magazine canvas,
+    #magazineContainer {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+    }
+    
+    #magazine .page,
+    #magazine canvas {
+        border-radius: 12px !important;
+    }
+    
+    /* Transparent canvas backgrounds while loading */
+    #magazine canvas {
+        background: transparent !important;
+    }
+    
+    .pdfViewer .page {
+        background: transparent !important;
+    }
+    
+    #viewer .canvasWrapper {
+        background: transparent !important;
+    }
+    
+    canvas {
+        background: transparent !important;
+    }
 </style>
 </head>
 
