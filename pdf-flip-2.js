@@ -41,11 +41,7 @@ var PdfFlip = {
         PdfFlip.currentPage = PDFViewerApplication.page;
 
         // Preload all pages for smooth animation
-var pages = [];
-for (var i = 1; i <= PDFViewerApplication.pdfDocument.numPages; i++) {
-    pages.push(i);
-}
-
+var pages = [1];
         PdfFlip.loadTurnJsPages(pages, $('#magazine'), true, true).then(function () {
 
             $("#magazine").turn({
