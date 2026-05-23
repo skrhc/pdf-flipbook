@@ -144,15 +144,10 @@ $(document).on('click', '#magazine', function(e) {
                     flipbook: $('#magazine'),
                     when: {
                         tap: function (event) {
-
-                            if ($(this).zoom('value') == 1) {
-                                $('#magazine').
-                                    removeClass('animated').
-                                    addClass('zoom-in');
-                                $(this).zoom('zoomIn', event);
-                            } else {
-                                $(this).zoom('zoomOut');
-                            }
+    // Zoom disabled - do nothing
+    event.preventDefault();
+    return false;
+},
                         },
                         resize: function (event, scale, page, pageElement) {
                             PdfFlip.currentScale = scale;
