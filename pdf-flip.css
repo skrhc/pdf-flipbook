@@ -76,3 +76,14 @@
     right: 0;
     background: #f7f6f6 url(pics/alt-next.png) no-repeat center center;
 }
+/* Remove all borders and shadows */
+* {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+body {
+  background: white;
+  margin: 0;
+  padding: 0;
+}
