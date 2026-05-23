@@ -1,4 +1,4 @@
-﻿var PdfFlip = {
+var PdfFlip = {
     magazineMode: true,
     oldScale: 1,
     currentPage: 1,
@@ -139,16 +139,20 @@ $(document).on('click', '#magazine', function(e) {
                     $("#magazine").turn("page", PdfFlip.currentPage);
 
 
-// Zoom disabled
-/*
-$("#magazineContainer").zoom({
-    max: PdfFlip.maxScale,
-    flipbook: $('#magazine'),
-    when: {
-        ... all the zoom code ...
-    }
-});
-*/
+                $("#magazineContainer").zoom({
+                    max: PdfFlip.maxScale,
+                    flipbook: $('#magazine'),
+                    when: {
+                        tap: function (event) {
+
+                            if ($(this).zoom('value') == 1) {
+                                $('#magazine').
+                                    removeClass('animated').
+                                    addClass('zoom-in');
+                                $(this).zoom('zoomIn', event);
+                            } else {
+                                $(this).zoom('zoomOut');
+                            }
                         },
                         resize: function (event, scale, page, pageElement) {
                             PdfFlip.currentScale = scale;
