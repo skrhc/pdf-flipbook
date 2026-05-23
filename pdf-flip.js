@@ -3,7 +3,7 @@ var PdfFlip = {
     oldScale: 1,
     currentPage: 1,
     currentScale: 1,
-    layout: 'single',
+    layout: 'double',
     maxScale: 1,
     audioSrc: "sound/page-flip.mp3",
     init: function () {
@@ -46,7 +46,7 @@ var PdfFlip = {
 
             $("#magazine").turn({
                 autoCenter: true,
-                display: 'single',
+                display: 'double',
                 width: $("#viewer .canvasWrapper canvas")[0].width,
                 height: $("#viewer .canvasWrapper canvas")[0].height,
                 pages: PDFViewerApplication.pdfDocument.numPages,
@@ -76,9 +76,9 @@ var PdfFlip = {
             });
 
             setTimeout(function () {
-                $("#magazine").turn("display", 'single');
+                $("#magazine").turn("display", 'double');
                 $("#magazine").turn("size",
-                    $("#magazine canvas")[0].width,
+                    $("#magazine canvas")[0].width * 2,
                     $("#magazine canvas")[0].height);
 
                 if (PdfFlip.currentPage > 1)
@@ -123,7 +123,7 @@ var PdfFlip = {
                 var destinationCanvas = document.createElement('canvas');
 
                 var unscaledViewport = page.getViewport(1);
-                var divider = 1;
+                var divider = 2;
 
                 var scale = Math.min((($('#mainContainer').height() - 20) / unscaledViewport.height), ((($('#mainContainer').width() - 80) / divider) / unscaledViewport.width));
 
