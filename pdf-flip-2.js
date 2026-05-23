@@ -52,7 +52,7 @@ var PdfFlip = {
                 pages: PDFViewerApplication.pdfDocument.numPages,
                 page: 1,
                 elevation: 100,
-                duration: 1000,
+                duration: 600,
                 acceleration: !PdfFlip.isChrome(),
                 when: {
                     missing: function (event, pages) {
@@ -88,25 +88,15 @@ var PdfFlip = {
                     $("#magazine").turn("page", PdfFlip.currentPage);
 
                 $('#magazine').on('click', function(e) {
-                    var magazine = $(this);
-                    
-                    // Don't trigger if already animating
-                    if (magazine.turn('animating')) {
-                        return;
-                    }
-                    
-                    var offset = magazine.offset();
-                    var width = magazine.width();
+                    var offset = $(this).offset();
+                    var width = $(this).width();
                     var clickX = e.pageX - offset.left;
                     
                     if (clickX > width / 2) {
-                        magazine.turn('next');
+                        $(this).turn('next');
                     } else {
-                        magazine.turn('previous');
+                        $(this).turn('previous');
                     }
-                    
-                    e.stopPropagation();
-                    e.preventDefault();
                 });
 
                 $('#magazineContainer').css({
