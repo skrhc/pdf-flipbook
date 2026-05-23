@@ -20,24 +20,6 @@ var PdfFlip = {
             }
         });
 
-        // Add click navigation directly on the magazine
-        $(document).on('click', '#magazine', function(e) {
-            var magazine = $(this);
-            var offset = magazine.offset();
-            var width = magazine.width();
-            var clickX = e.pageX - offset.left;
-            
-            // Click on right half = next page
-            if (clickX > width / 2) {
-                magazine.turn('next');
-            } 
-            // Click on left half = previous page
-            else {
-                magazine.turn('previous');
-            }
-        });
-
-
         $(document).on('click','#firstPage',function(){
             $("#magazine").turn('page', 1);
         });
@@ -45,7 +27,6 @@ var PdfFlip = {
         $(document).on('click','#lastPage',function(){
             $("#magazine").turn('page', PDFViewerApplication.pagesCount);
         });
-
 
         $(document).on('click','#thumbnailView a',function(){
           $('.toolbar .pageNumber').trigger('change');
@@ -87,7 +68,6 @@ var PdfFlip = {
 
         PdfFlip.currentPage = PDFViewerApplication.page;
 
-
         var pages = [1];
 
         PdfFlip.loadTurnJsPages(pages, $('#magazine'), true, true).then(function () {
@@ -108,11 +88,9 @@ var PdfFlip = {
                     },
                     turning: function (event, page, view) {
                         if (!$('#magazine').turn('hasPage', page)) {
-
                             PdfFlip.loadTurnJsPages([page], this, false, true).then(function () {
                                 $('#magazine').turn('page', page);
                             });
-
                             event.preventDefault();
                         }
                         PdfFlip.startTurnSound();
@@ -124,7 +102,6 @@ var PdfFlip = {
                     }
                 }
             });
-
 
             setTimeout(function () {
                 $("#magazine").turn("display", PdfFlip.layout);
@@ -138,114 +115,51 @@ var PdfFlip = {
                 if (PdfFlip.currentPage > 1)
                     $("#magazine").turn("page", PdfFlip.currentPage);
 
-
-                $("#magazineContainer").zoom({
-                    max: PdfFlip.maxScale,
-                    flipbook: $('#magazine'),
-                    when: {
-                        tap: function (event) {
-                            // Zoom disabled - clicks handled by page flip handler
-                            event.preventDefault();
-                            return false;
-                        },
-                        resize: function (event, scale, page, pageElement) {
-                            PdfFlip.currentScale = scale;
-                            PdfFlip.loadTurnJsPages($('#magazine').turn('view'), $('#magazine'), false, false);
-
-                        },
-                        zoomIn: function () {
-                            $('.zoom-icon').removeClass('zoom-icon-in').addClass('zoom-icon-out');
-                            $('#magazine').addClass('zoom-in');
-                            PdfFlip.resizeViewport();
-                        },
-                        zoomOut: function () {
-                            $('.zoom-icon').removeClass('zoom-icon-out').addClass('zoom-icon-in');
-                            setTimeout(function () {
-                                $('#magazine').addClass('animated').removeClass('zoom-in');
-                                PdfFlip.resizeViewport();
-                            }, 0);
-
-                        },
-                        swipeLeft: function () {
-                            $('#magazine').turn('next');
-                        },
-                        swipeRight: function () {
-                            $('#magazine').turn('previous');
-                        }
+                // Add click navigation AFTER magazine is initialized
+                $('#magazine').off('click').on('click', function(e) {
+                    var offset = $(this).offset();
+                    var width = $(this).width();
+                    var clickX = e.pageX - offset.left;
+                    
+                    if (clickX > width / 2) {
+                        $(this).turn('next');
+                    } else {
+                        $(this).turn('previous');
                     }
+                    e.stopPropagation();
                 });
 
-                $('.zoom-icon').bind('click', function () {
-                    if ($(this).hasClass('zoom-icon-in'))
-                        $('#magazineContainer').zoom('zoomIn');
-                    else if ($(this).hasClass('zoom-icon-out'))
-                        $('#magazineContainer').zoom('zoomOut');
-
+                // Disable zoom completely - don't initialize it
+                $('#magazineContainer').css({
+                    width: $(window).width(),
+                    height: $(window).height()
                 });
 
             }, 10);
         });
 
-
     },
     resizeViewport: function () {
-
         var width = $(window).width(),
-            height = $(window).height(),
-            options = $('#magazine').turn('options');
-
-        $('#magazine').removeClass('animated');
+            height = $(window).height();
 
         $('#magazineContainer').css({
             width: width,
-            height: height - $('.toolbar').height()
-        }).zoom('resize');
-
-
-        if ($('#magazine').turn('zoom') == 2) {
-            var bound = PdfFlip.calculateBound({
-                width: options.width,
-                height: options.height,
-                boundWidth: Math.min(options.width, width),
-                boundHeight: Math.min(options.height, height)
-            });
-
-            if (bound.width % 2 !== 0)
-                bound.width -= 1;
-
-
-            if (bound.width != $('#magazine').width() || bound.height != $('#magazine').height()) {
-
-                $('#magazine').turn('size', bound.width, bound.height);
-
-                if ($('#magazine').turn('page') == 1)
-                    $('#magazine').turn('peel', 'br');
-            }
-
-            $('#magazine').css({top: -bound.height / 2, left: -bound.width / 2});
-        }
-
-        $('#magazine').addClass('animated');
-
+            height: height
+        });
     },
     calculateBound: function (d) {
-
         var bound = {width: d.width, height: d.height};
 
         if (bound.width > d.boundWidth || bound.height > d.boundHeight) {
-
             var rel = bound.width / bound.height;
 
             if (d.boundWidth / rel > d.boundHeight && d.boundHeight * rel <= d.boundWidth) {
-
                 bound.width = Math.round(d.boundHeight * rel);
                 bound.height = d.boundHeight;
-
             } else {
-
                 bound.width = d.boundWidth;
                 bound.height = Math.round(d.boundWidth / rel);
-
             }
         }
 
@@ -278,13 +192,11 @@ var PdfFlip = {
 
                 var viewport = page.getViewport(scale);
 
-
                 if (PdfFlip.currentScale > 1)
                     viewport = page.getViewport(PdfFlip.currentScale);
 
-                destinationCanvas.height = viewport.height; // - ((viewport.height / 100) * 10);
-                destinationCanvas.width = viewport.width; // - ((viewport.width / 100) * 10);
-
+                destinationCanvas.height = viewport.height;
+                destinationCanvas.width = viewport.width;
 
                 var renderContext = {
                     canvasContext: destinationCanvas.getContext("2d"),
@@ -297,20 +209,14 @@ var PdfFlip = {
                     destinationCanvas.setAttribute('data-page-number', page.pageNumber);
                     destinationCanvas.id = 'magCanvas' + page.pageNumber;
 
-
                     if (!isInit) {
                         if ($(magazine).turn('hasPage', page.pageNumber)) {
-
                             var oldCanvas = $('#magCanvas' + page.pageNumber)[0];
                             oldCanvas.width = destinationCanvas.width;
                             oldCanvas.height = destinationCanvas.height;
 
                             var oldCtx = oldCanvas.getContext("2d");
-
-
                             oldCtx.drawImage(destinationCanvas, 0, 0);
-
-
                         }
                         else {
                             $(magazine).turn('addPage', $(destinationCanvas), page.pageNumber);
