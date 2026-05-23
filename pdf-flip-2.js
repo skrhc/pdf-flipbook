@@ -104,7 +104,20 @@ var pages = [1];
                     height: $(window).height()
                 });
 
-            }, 10);
+           }, 10);
+
+            // Preload remaining pages in background
+            setTimeout(function() {
+                var totalPages = PDFViewerApplication.pdfDocument.numPages;
+                var currentView = $('#magazine').turn('view');
+                
+                // Preload pages not currently visible
+                for (var i = 1; i <= totalPages; i++) {
+                    if (currentView.indexOf(i) === -1) {
+                        PdfFlip.loadTurnJsPages([i], $('#magazine'), false, false);
+                    }
+                }
+            }, 2000);
         });
 
     },
