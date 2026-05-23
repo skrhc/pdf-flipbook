@@ -8,34 +8,34 @@ var PdfFlip = {
     audioSrc: "sound/page-flip.mp3",
     init: function () {
 
-$(window).bind('keydown', function (e) {
-    console.log(e.keyCode);
-    if (e.target && e.target.tagName.toLowerCase() != 'input') {
-        if (e.keyCode == 37 || e.keyCode == 38) {
-            $("#magazine").turn('previous');
-        }
-        else if (e.keyCode == 39 || e.keyCode == 40) {
-            $("#magazine").turn('next');
-        }
-    }
-});
+        $(window).bind('keydown', function (e) {
+            console.log(e.keyCode);
+            if (e.target && e.target.tagName.toLowerCase() != 'input') {
+                if (e.keyCode == 37 || e.keyCode == 38) {
+                    $("#magazine").turn('previous');
+                }
+                else if (e.keyCode == 39 || e.keyCode == 40) {
+                    $("#magazine").turn('next');
+                }
+            }
+        });
 
-// Add click navigation directly on the magazine
-$(document).on('click', '#magazine', function(e) {
-    var magazine = $(this);
-    var offset = magazine.offset();
-    var width = magazine.width();
-    var clickX = e.pageX - offset.left;
-    
-    // Click on right half = next page
-    if (clickX > width / 2) {
-        magazine.turn('next');
-    } 
-    // Click on left half = previous page
-    else {
-        magazine.turn('previous');
-    }
-});
+        // Add click navigation directly on the magazine
+        $(document).on('click', '#magazine', function(e) {
+            var magazine = $(this);
+            var offset = magazine.offset();
+            var width = magazine.width();
+            var clickX = e.pageX - offset.left;
+            
+            // Click on right half = next page
+            if (clickX > width / 2) {
+                magazine.turn('next');
+            } 
+            // Click on left half = previous page
+            else {
+                magazine.turn('previous');
+            }
+        });
 
 
         $(document).on('click','#firstPage',function(){
@@ -144,15 +144,9 @@ $(document).on('click', '#magazine', function(e) {
                     flipbook: $('#magazine'),
                     when: {
                         tap: function (event) {
-
-                            if ($(this).zoom('value') == 1) {
-                                $('#magazine').
-                                    removeClass('animated').
-                                    addClass('zoom-in');
-                                $(this).zoom('zoomIn', event);
-                            } else {
-                                $(this).zoom('zoomOut');
-                            }
+                            // Zoom disabled - clicks handled by page flip handler
+                            event.preventDefault();
+                            return false;
                         },
                         resize: function (event, scale, page, pageElement) {
                             PdfFlip.currentScale = scale;
