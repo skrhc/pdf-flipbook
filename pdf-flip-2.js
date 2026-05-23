@@ -22,7 +22,7 @@ var PdfFlip = {
         document.addEventListener("pagesloaded", PdfFlip.launchMagazineMode, true);
     },
     launchMagazineMode: function (e) {
-        document.removeEventListener("pagesloaded", PdfFlip.launchMagazina, true);
+        document.removeEventListener("pagesloaded", PdfFlip.launchMagazineMode, true);
         PdfFlip.start();
     },
     start: function () {
