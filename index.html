@@ -109,6 +109,20 @@ See https://github.com/adobe-type-tools/cmap-resources
     canvas {
         background: transparent !important;
     }
+    canvas {
+    background: transparent !important;
+}
+
+/* Fade in pages as they load */
+#magazine canvas {
+    opacity: 0;
+    animation: fadeIn 0.3s ease-in forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 </style>
 </head>
 
