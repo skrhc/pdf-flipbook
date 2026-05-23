@@ -3,13 +3,12 @@ var PdfFlip = {
     oldScale: 1,
     currentPage: 1,
     currentScale: 1,
-    layout: 'double',
-    maxScale: 2,
+    layout: 'single',
+    maxScale: 1,
     audioSrc: "sound/page-flip.mp3",
     init: function () {
 
         $(window).bind('keydown', function (e) {
-            console.log(e.keyCode);
             if (e.target && e.target.tagName.toLowerCase() != 'input') {
                 if (e.keyCode == 37 || e.keyCode == 38) {
                     $("#magazine").turn('previous');
@@ -18,32 +17,6 @@ var PdfFlip = {
                     $("#magazine").turn('next');
                 }
             }
-        });
-
-        $(document).on('click','#firstPage',function(){
-            $("#magazine").turn('page', 1);
-        });
-
-        $(document).on('click','#lastPage',function(){
-            $("#magazine").turn('page', PDFViewerApplication.pagesCount);
-        });
-
-        $(document).on('click','#thumbnailView a',function(){
-          $('.toolbar .pageNumber').trigger('change');
-        });
-
-        $(document).on('change', '.toolbar .pageNumber', function (e) {
-            $("#magazine").turn('page', $(this).val());
-        });
-
-        $(document).on('click', '.toolbar #previous , .directions .prev-button', function (e) {
-            $("#magazine").turn('previous');
-            return false;
-        });
-
-        $(document).on('click', '.toolbar #next, .directions .next-button', function (e) {
-            $("#magazine").turn('next');
-            return false;
         });
 
         document.addEventListener("pagesloaded", PdfFlip.launchMagazineMode, true);
@@ -60,7 +33,6 @@ var PdfFlip = {
         PDFViewerApplication.pdfViewer.currentScaleValue = 'page-fit';
 
         $('#viewerContainer').after('<div id="magazineContainer"><div id="magazine"></div></div>');
-        $('body').append('<div class="directions"><a href="#" class="prev-button"></a><a href="#" class="next-button"></a></div>')
         $("#viewerContainer").hide();
         $("#viewer").hide();
         $(".se-pre-con").hide();
@@ -104,19 +76,15 @@ var PdfFlip = {
             });
 
             setTimeout(function () {
-                $("#magazine").turn("display", PdfFlip.layout);
-
-                var multiplier = PdfFlip.layout == 'double' ? 2 : 1;
-
+                $("#magazine").turn("display", 'single');
                 $("#magazine").turn("size",
-                    $("#magazine canvas")[0].width * multiplier,
+                    $("#magazine canvas")[0].width,
                     $("#magazine canvas")[0].height);
 
                 if (PdfFlip.currentPage > 1)
                     $("#magazine").turn("page", PdfFlip.currentPage);
 
-                // Add click navigation AFTER magazine is initialized
-                $('#magazine').off('click').on('click', function(e) {
+                $('#magazine').on('click', function(e) {
                     var offset = $(this).offset();
                     var width = $(this).width();
                     var clickX = e.pageX - offset.left;
@@ -126,10 +94,8 @@ var PdfFlip = {
                     } else {
                         $(this).turn('previous');
                     }
-                    e.stopPropagation();
                 });
 
-                // Disable zoom completely - don't initialize it
                 $('#magazineContainer').css({
                     width: $(window).width(),
                     height: $(window).height()
@@ -138,35 +104,6 @@ var PdfFlip = {
             }, 10);
         });
 
-    },
-    resizeViewport: function () {
-        var width = $(window).width(),
-            height = $(window).height();
-
-        $('#magazineContainer').css({
-            width: width,
-            height: height
-        });
-    },
-    calculateBound: function (d) {
-        var bound = {width: d.width, height: d.height};
-
-        if (bound.width > d.boundWidth || bound.height > d.boundHeight) {
-            var rel = bound.width / bound.height;
-
-            if (d.boundWidth / rel > d.boundHeight && d.boundHeight * rel <= d.boundWidth) {
-                bound.width = Math.round(d.boundHeight * rel);
-                bound.height = d.boundHeight;
-            } else {
-                bound.width = d.boundWidth;
-                bound.height = Math.round(d.boundWidth / rel);
-            }
-        }
-
-        return bound;
-    },
-    calculateTotalPages: function () {
-        return $('#viewer .page').length;
     },
     startTurnSound: function () {
         var audio = new Audio(PdfFlip.audioSrc);
@@ -186,7 +123,7 @@ var PdfFlip = {
                 var destinationCanvas = document.createElement('canvas');
 
                 var unscaledViewport = page.getViewport(1);
-                var divider = PdfFlip.layout == 'double' ? 2 : 1;
+                var divider = 1;
 
                 var scale = Math.min((($('#mainContainer').height() - 20) / unscaledViewport.height), ((($('#mainContainer').width() - 80) / divider) / unscaledViewport.width));
 
