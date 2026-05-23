@@ -77,8 +77,11 @@ var PdfFlip = {
 
             setTimeout(function () {
                 $("#magazine").turn("display", 'double');
+
+                var multiplier = 2;
+
                 $("#magazine").turn("size",
-                    $("#magazine canvas")[0].width * 2,
+                    $("#magazine canvas")[0].width * multiplier,
                     $("#magazine canvas")[0].height);
 
                 if (PdfFlip.currentPage > 1)
