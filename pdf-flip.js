@@ -139,15 +139,16 @@ $(document).on('click', '#magazine', function(e) {
                     $("#magazine").turn("page", PdfFlip.currentPage);
 
 
-                $("#magazineContainer").zoom({
-                    max: PdfFlip.maxScale,
-                    flipbook: $('#magazine'),
-                    when: {
-                        tap: function (event) {
-    // Zoom disabled - do nothing
-    event.preventDefault();
-    return false;
-},
+// Zoom disabled
+/*
+$("#magazineContainer").zoom({
+    max: PdfFlip.maxScale,
+    flipbook: $('#magazine'),
+    when: {
+        ... all the zoom code ...
+    }
+});
+*/
                         },
                         resize: function (event, scale, page, pageElement) {
                             PdfFlip.currentScale = scale;
