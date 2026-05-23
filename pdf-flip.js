@@ -8,17 +8,34 @@
     audioSrc: "sound/page-flip.mp3",
     init: function () {
 
-        $(window).bind('keydown', function (e) {
-            console.log(e.keyCode);
-            if (e.target && e.target.tagName.toLowerCase() != 'input') {
-                if (e.keyCode == 37 || e.keyCode == 38) {
-                    $('.directions .prev-button').click();
-                }
-                else if (e.keyCode == 39 || e.keyCode == 40) {
-                    $('.directions .next-button').click();
-                }
-            }
-        });
+$(window).bind('keydown', function (e) {
+    console.log(e.keyCode);
+    if (e.target && e.target.tagName.toLowerCase() != 'input') {
+        if (e.keyCode == 37 || e.keyCode == 38) {
+            $("#magazine").turn('previous');
+        }
+        else if (e.keyCode == 39 || e.keyCode == 40) {
+            $("#magazine").turn('next');
+        }
+    }
+});
+
+// Add click navigation directly on the magazine
+$(document).on('click', '#magazine', function(e) {
+    var magazine = $(this);
+    var offset = magazine.offset();
+    var width = magazine.width();
+    var clickX = e.pageX - offset.left;
+    
+    // Click on right half = next page
+    if (clickX > width / 2) {
+        magazine.turn('next');
+    } 
+    // Click on left half = previous page
+    else {
+        magazine.turn('previous');
+    }
+});
 
 
         $(document).on('click','#firstPage',function(){
