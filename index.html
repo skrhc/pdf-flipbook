@@ -29,17 +29,57 @@ See https://github.com/adobe-type-tools/cmap-resources
     <title>PDF viewer</title>
     <link rel="stylesheet" href="pdfjs/viewer.css"/>
     <link rel="stylesheet" href="pdf-flip.css"/>
-    <style>
-        .se-pre-con {
-            position: fixed;
-            left: 0px;
-            top: 0px;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            background: url(pics/loader.gif) center no-repeat #fff;
-        }
-    </style>
+<style>
+    .se-pre-con {
+        position: fixed;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: url(pics/loader.gif) center no-repeat #fff;
+    }
+    
+    /* Remove gray background and UI elements */
+    body {
+        background: white !important;
+        overflow: hidden;
+    }
+    
+    #canvas {
+        background: white !important;
+    }
+    
+    /* Hide the entire toolbar */
+    .toolbar,
+    #toolbarContainer,
+    #toolbarViewer {
+        display: none !important;
+    }
+    
+    /* Hide sidebar */
+    #sidebarContainer {
+        display: none !important;
+    }
+    
+    /* Make viewer take full space */
+    #mainContainer {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+    }
+    
+    #viewerContainer {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        overflow: hidden !important;
+    }
+</style>
 </head>
 
 <body tabindex="1" class="loadingInProgress">
